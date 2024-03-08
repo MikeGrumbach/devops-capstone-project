@@ -142,3 +142,41 @@ class TestAccountService(TestCase):
         """It should not Read an Account that is not found"""
         resp = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_account(self):
+        """It should Update an existing account"""
+        # create an account to update
+        account = AccountFactory()
+        response = self.client.post(
+            BASE_URL,
+            json=account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Make sure location header is set
+        location = response.headers.get("Location", None)
+        self.assertIsNotNone(location)
+        
+        # update the account
+        new_account = response.get_json()
+        new_account["email"] = "unknown"
+        response = self.client.put(f"{BASE_URL}/{new_account['id']}", json=new_account)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_account = response.get_json()
+        self.assertEqual(updated_account["email"], "unknown")
+
+    #def test_update_account_not_found(self):
+    #   this can be completed when we have delete created.
+    #   1) create an account
+    #   2) save the response to a duplicate-response
+    #   3) delete the response
+    #   4) attempt to update the duplicate-respone
+    #      since the response removed the account_id which the duplicate-response is pointing to
+    #      the put should fail and 
+    #      routes.py line 102: abort(status.HTTP_404_NOT_FOUND, f"Account with id '{account_id}' was not found.")
+    #      should be executed
+
+    #    """It should not Update an Account that is not found"""
+    #    resp = self.client.put(f"{BASE_URL}/0")
+    #    self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
