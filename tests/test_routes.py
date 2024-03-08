@@ -68,7 +68,7 @@ class TestAccountService(TestCase):
             new_account = response.get_json()
             account.id = new_account["id"]
             accounts.append(account)
-        return accounts
+        return accounts  
 
     ######################################################################
     #  A C C O U N T   T E S T   C A S E S
@@ -166,7 +166,7 @@ class TestAccountService(TestCase):
         updated_account = response.get_json()
         self.assertEqual(updated_account["email"], "unknown")
 
-    #def test_update_account_not_found(self):
+    #DO NOT DELETE !!! --- def test_update_account_not_found(self):
     #   this can be completed when we have delete created.
     #   1) create an account
     #   2) save the response to a duplicate-response
@@ -180,3 +180,35 @@ class TestAccountService(TestCase):
     #    """It should not Update an Account that is not found"""
     #    resp = self.client.put(f"{BASE_URL}/0")
     #    self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_account(self):
+        """It should Delete an Account"""
+
+        #create account to be deleted
+        test_account = self._create_accounts(1)[0]
+        resp = self.client.get(
+            f"{BASE_URL}/{test_account.id}", content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        response = self.client.delete(f"{BASE_URL}/{test_account.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(response.data), 0)
+
+        # make sure they are deleted
+        response = self.client.get(f"{BASE_URL}/{test_account.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    ######################################################################
+    # Utility functions
+    ######################################################################
+
+    def get_account_count(self):
+        """save the current number of accounts"""
+        
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+
+        # logging.debug("data = %s", data)
+        return len(data)
