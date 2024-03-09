@@ -123,7 +123,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(len(accounts), 0)
 
     def test_list_all_accounts(self):
-        """It should List all Accounts in the database"""
+        """It should List all Accounts in the database (test_models.py)"""
         accounts = Account.all()
         self.assertEqual(accounts, [])
         for account in AccountFactory.create_batch(5):

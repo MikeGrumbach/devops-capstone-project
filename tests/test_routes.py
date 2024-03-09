@@ -7,11 +7,13 @@ Test cases can be run with the following:
 """
 import os
 import logging
+from urllib.parse import quote_plus
+from decimal import Decimal
 from unittest import TestCase
-from tests.factories import AccountFactory
+from service import app
 from service.common import status  # HTTP Status Codes
-from service.models import db, Account, init_db
-from service.routes import app
+from service.models import db, init_db, Account
+from tests.factories import AccountFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -166,21 +168,6 @@ class TestAccountService(TestCase):
         updated_account = response.get_json()
         self.assertEqual(updated_account["email"], "unknown")
 
-    #DO NOT DELETE !!! --- def test_update_account_not_found(self):
-    #   this can be completed when we have delete created.
-    #   1) create an account
-    #   2) save the response to a duplicate-response
-    #   3) delete the response
-    #   4) attempt to update the duplicate-respone
-    #      since the response removed the account_id which the duplicate-response is pointing to
-    #      the put should fail and 
-    #      routes.py line 102: abort(status.HTTP_404_NOT_FOUND, f"Account with id '{account_id}' was not found.")
-    #      should be executed
-
-    #    """It should not Update an Account that is not found"""
-    #    resp = self.client.put(f"{BASE_URL}/0")
-    #    self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_delete_account(self):
         """It should Delete an Account"""
 
@@ -198,6 +185,14 @@ class TestAccountService(TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_account.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_account_list(self):
+        """It should Get a list of Accounts (test_routes.py)"""
+        self._create_accounts(5)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 5)  
 
     ######################################################################
     # Utility functions
