@@ -44,7 +44,7 @@ def create_accounts():
     Creates an Account
     This endpoint will create an Account based the data in the body that is posted
     """
-    app.logger.info("Request to create an Account")
+    app.logger.error("Request to create an Account")
     check_content_type("application/json")
     account = Account()
     account.deserialize(request.get_json())
@@ -61,13 +61,13 @@ def create_accounts():
 # LIST ALL ACCOUNTS
 ######################################################################
 
-@app.route("/accounts", methods=["GET"]) 
-def list_accounts(): 
-    """ List all Accounts This endpoint will list all Accounts """ 
-    app.logger.info("Request to list Accounts") 
-    accounts = Account.all() 
-    account_list = [account.serialize() for account in accounts] 
-    app.logger.info("Returning [%s] accounts", len(account_list)) 
+@app.route("/accounts", methods=["GET"])
+def list_accounts():
+    """ List all Accounts This endpoint will list all Accounts """
+    app.logger.info("Request to list Accounts")
+    accounts = Account.all()
+    account_list = [account.serialize() for account in accounts]
+    app.logger.info("Returning [%s] accounts", len(account_list))
     return jsonify(account_list), status.HTTP_200_OK
 
 
@@ -147,4 +147,4 @@ def check_content_type(media_type):
     abort(
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
         f"Content-Type must be {media_type}",
-    ) 
+    )
