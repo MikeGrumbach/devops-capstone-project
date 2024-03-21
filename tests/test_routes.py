@@ -71,7 +71,7 @@ class TestAccountService(TestCase):
             new_account = response.get_json()
             account.id = new_account["id"]
             accounts.append(account)
-        return accounts  
+        return accounts
 
     ######################################################################
     #  A C C O U N T   T E S T   C A S E S
@@ -116,9 +116,9 @@ class TestAccountService(TestCase):
         response = self.client.post(BASE_URL, json={"name": "not enough data"})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_405(self):        
-        """It should not allow the post method"""        
-        response1 = self.client.post()        
+    def test_405(self):
+        """It should not allow the post method"""
+        response1 = self.client.post()
         self.assertEqual(response1.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_unsupported_media_type(self):
@@ -160,7 +160,7 @@ class TestAccountService(TestCase):
         # Make sure location header is set
         location = response.headers.get("Location", None)
         self.assertIsNotNone(location)
-        
+
         # update the account
         new_account = response.get_json()
         new_account["email"] = "unknown"
@@ -172,7 +172,7 @@ class TestAccountService(TestCase):
     def test_delete_account(self):
         """It should Delete an Account"""
 
-        #create account to be deleted
+#create account to be deleted
         test_account = self._create_accounts(1)[0]
         resp = self.client.get(
             f"{BASE_URL}/{test_account.id}", content_type="application/json"
@@ -193,7 +193,7 @@ class TestAccountService(TestCase):
         response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
-        self.assertEqual(len(data), 5)  
+        self.assertEqual(len(data), 5)
 
     def test_security_headers(self):
         """It should return security headers"""
@@ -221,7 +221,7 @@ class TestAccountService(TestCase):
 
     def get_account_count(self):
         """save the current number of accounts"""
-        
+
         response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
@@ -233,3 +233,4 @@ class TestAccountService(TestCase):
         """It should not allow an illegal method call"""
         resp = self.client.delete(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        
