@@ -7,7 +7,6 @@ Test cases can be run with the following:
 """
 import os
 import logging
-from decimal import Decimal
 from unittest import TestCase
 from service import app
 from service.common import status  # HTTP Status Codes
@@ -38,7 +37,7 @@ class TestAccountService(TestCase):
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
         talisman.force_https = False
-        
+
     @classmethod
     def tearDownClass(cls):
         """Runs once before test suite"""
