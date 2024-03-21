@@ -7,7 +7,6 @@ Test cases can be run with the following:
 """
 import os
 import logging
-#from urllib.parse import quote_plus
 from decimal import Decimal
 from unittest import TestCase
 from service import app
