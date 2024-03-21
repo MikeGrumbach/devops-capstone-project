@@ -229,7 +229,7 @@ class TestAccountService(TestCase):
         # logging.debug("data = %s", data)
         return len(data)
 
-    def test_method_not_allowed(self): 
+    def test_method_not_allowed(self):
         """It should not allow an illegal method call"""
         resp = self.client.delete(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
