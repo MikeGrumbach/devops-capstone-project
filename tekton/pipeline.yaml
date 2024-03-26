@@ -15,7 +15,7 @@ spec:
     - name: repo-url
     - name: branch
       default: main
-    - name: build-image  
+    - name: build-image
   tasks:
     - name: init
       workspaces:
@@ -50,7 +50,7 @@ spec:
       - name: args
         value: ["--count","--max-complexity=10","--max-line-length=127","--statistics"]
       runAfter:
-        - clone    
+        - clone
 
     - name: tests
       workspaces:
@@ -79,7 +79,7 @@ spec:
       runAfter:
         - tests
         - lint
-        
+
     - name: deploy
       workspaces:
         - name: manifest-dir
@@ -98,3 +98,5 @@ spec:
           oc get pods -l app=accounts
       runAfter:
         - build
+
+    
